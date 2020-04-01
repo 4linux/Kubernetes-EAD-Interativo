@@ -1,0 +1,73 @@
+LAB 1.7 - Backup e Restore do Cluster Kubernetes
+
+######## EXECUTAR OS COMANDOS NA VMS KUBE MASTER ########
+
+Instalação da ferramenta etcdctl
+
+sudo su -
+
+ls
+tar xvf etcd-v3.3.13-linux-amd64.tar.gz
+
+mv etcd-v3.3.13-linux-amd64/etcd* /usr/local/bin/
+export ETCDCTL_API=3
+
+Realizar backup com a ferramenta etcdctl
+
+etcdctl snapshot save --help
+
+etcdctl snapshot save snapshot.db \
+   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt \
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+
+etcdctl --write-out=table snapshot status snapshot.db
+
+Realizar backup de configurações do cluster
+
+mkdir -p /data/backup
+cp -r /etc/kubernetes /data/backup/kubernetes.bak
+
+Remover Nós do Cluster
+
+exit
+kubectl get nodes
+
+kubectl delete node kube-node01.dexter.com.br
+kubectl delete node kube-node02.dexter.com.br
+
+kubectl get nodes
+
+Resetar configuração e limpar regras de Firewall do Cluster
+
+sudo su -
+kubeadm reset
+[reset] Are you sure you want to proceed? [y/N]: y <TECLE ENTER>
+
+iptables -F
+iptables -t nat -F 
+iptables -t mangle -F
+iptables -X
+
+Realizar restore do Cluster – ETAPA 1
+
+rm -rf /etc/kubernetes/*
+cp -r /data/backup/kubernetes.bak/* /etc/kubernetes/
+export ETCDCTL_API=3
+etcdctl snapshot restore snapshot.db
+
+Realizar restore do Cluster – ETAPA 2
+
+rm -rf /var/lib/etcd/*
+mv default.etcd/member /var/lib/etcd/
+
+systemctl restart kubelet
+kubeadm init --ignore-preflight-errors=all
+
+Realizar restore do Cluster – ETAPA 3
+
+exit
+kubectl delete -f aula02/network/calico.yaml
+kubectl apply -f aula02/network/calico.yaml
+
+kubectl get nodes,pods -n kube-system

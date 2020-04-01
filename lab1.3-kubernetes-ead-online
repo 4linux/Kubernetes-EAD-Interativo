@@ -1,0 +1,49 @@
+LAB 1.3 - Configuração do Cluster Kubernetes
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+Logue com usuário suporte e verifique as opções do comando kubeadmin:
+sudo kubeadm --help
+
+Execute o comando para listar e extrair as imagens que o kubeadm vai utilizar:
+sudo kubeadm config images pull --kubernetes-version=1.16.1
+
+Para configurar o cluster kubernetes, execute o comando kubeadmin init:
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=200.100.50.100 --kubernetes-version=1.16.1
+
+Configure o acesso ao Cluster
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+Listar componentes do Cluster – ETAPA 1
+
+kubectl --help 
+kubectl get namespaces
+kubectl get pods
+kubectl get deployments
+
+Listar componentes do Cluster – ETAPA 2
+
+kubectl get services
+kubectl get pods -n kube-system
+kubectl get deployments -n kube-system
+kubectl get services -n kube-system
+
+Ativar rede Calico no Cluster
+ls aula02/network
+kubectl apply -f aula02/network/calico.yaml
+ou
+kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+
+Verifique se os containers da rede Calico estão presentes no Cluster Kubernetes:
+kubectl get pods -n kube-system
+
+Ativar bash-completion no Kubernetes
+
+sudo apt-get install bash-completion -y
+source /usr/share/bash-completion/bash_completion
+echo 'source <(kubectl completion bash)' >>~/.bashrc
+echo 'source <(kubeadm completion bash)' >>~/.bashrc
+bash

@@ -1,0 +1,63 @@
+LAB 1.4 - Gerenciar Nodes do Cluster Kubernetes
+
+######## EXECUTAR OS COMANDOS NA VMS KUBE MASTER ########
+
+Criar Token de acesso ao Cluster
+
+sudo kubeadm token create --help
+sudo kubeadm token create --print-join-command --ttl 1m --description="Teste"
+sudo kubeadm token list
+
+
+TK=$(sudo kubeadm token list | grep Teste | awk -F" " '{print $1}')
+echo $TK
+
+sudo kubeadm token delete $TK
+sudo kubeadm token list
+
+Crie um token com tempo de vida de 30 minutos e copie a saída do comando:
+sudo kubeadm token create --print-join-command --ttl 30m
+
+######## EXECUTAR OS COMANDOS NA VMS KUBE NODE 01 e NODE 02 ########
+
+Cole o resultado copiado da saida do comando kubeadm token create:
+sudo <COLAR COMANDO COPIADO>
+
+
+######## EXECUTAR OS COMANDOS NA VMS KUBE MASTER ########
+
+Obter informações sobre os Nó do Cluster
+
+kubectl get nodes
+kubectl get pods -n kube-system
+
+kubectl describe node node1
+kubectl describe node node2
+
+Remover Nó no Cluster
+
+kubectl delete node node2
+kubectl get nodes
+
+
+Adicionar novamente Nó no Cluster
+
+######## EXECUTAR O COMANDO NA VM KUBE NODE 02 ########
+
+Execute o comando na máquina Kube Node 2 para adicionar o nó, ignorando erros:
+sudo <COLAR COMANDO COPIADO> --ignore-preflight-errors=all
+
+
+######## EXECUTAR OS COMANDOS NA VMS KUBE MASTER ########
+kubectl get nodes
+
+DICA: Como listar o TOKEN e DISCOVERY TOKEN
+
+sudo kubeadm token list
+
+sudo openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt \
+    | openssl rsa -pubin -outform der 2>/dev/null \
+    | openssl dgst -sha256 -hex \
+    | sed 's/^.* //'
+
+
