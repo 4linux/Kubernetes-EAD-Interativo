@@ -1,0 +1,43 @@
+LAB 2.5 - Gerenciar Ingress com HTTP e Rewrite
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+
+### Configurar Ingress na porta 80 – ETAPA 1
+
+cat /aula03/ingress/http/deploy-nginx.yaml 
+kubectl create -f aula03/ingress/http/deploy-nginx.yaml 
+
+cat aula03/ingress/http/ingress-nginx.yaml 
+kubectl create -f aula03/ingress/http/ingress-nginx.yaml 
+
+### Configurar Ingress na porta 80 – ETAPA 2
+
+kubectl get ingress
+kubectl describe ingress dexter-ingress
+
+curl nginx.dexter.com.br
+
+kubectl delete -f aula03/ingress/http
+
+
+### Configurar Ingress para Redirecionamento – ETAPA 1
+
+cat aula03/ingress/rewrite/deploy-nginx.yaml 
+kubectl create -f aula03/ingress/rewrite/deploy-nginx.yaml
+
+cat aula03/ingress/web-nginx.sh
+bash aula03/ingress/web-nginx.sh
+
+cat aula03/ingress/rewrite/ingress-rewrite.yaml
+kubectl create -f aula03/ingress/rewrite/ingress-rewrite.yaml 
+
+### Configurar Ingress para Redirecionamento – ETAPA 1
+
+kubectl get ingress
+kubectl describe ingress ingress-rewrite
+
+curl nginx.dexter.com.br/matriz
+curl nginx.dexter.com.br/filial
+
+kubectl delete -f aula03/ingress/rewrite

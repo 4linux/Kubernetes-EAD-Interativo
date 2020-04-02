@@ -1,0 +1,56 @@
+LAB 2.1 - Configuração do Cluster Kubernetes
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Realizar comunicação em rede entre Pods – ETAPA 1
+
+kubectl get pods --all-namespaces
+kubectl describe node kube-node01.dexter.com.br | grep IPv4IPIPTunnelAddr
+kubectl run pod1 --generator=run-pod/v1 --image=alpine --restart Never -- /bin/sleep 999999
+
+### Realizar comunicação em rede entre Pods – ETAPA 2
+
+kubectl run pod2 --generator=run-pod/v1 --image=alpine --restart Never -- /bin/sleep 999999
+kubectl get pods -o wide
+
+kubectl exec -it pod1 -- ifconfig eth0
+kubectl exec -it pod2 -- ifconfig eth0
+
+### Realizar comunicação em rede entre Pods – ETAPA 3
+
+kubectl exec -it pod1 -- ping -c4 <IP_POD2>
+kubectl exec -it pod2 -- ping -c4 <IP_POD1>
+
+kubectl delete pod pod1
+kubectl delete pod pod2
+kubectl get pods
+
+### Criar Serviço NodePort – ETAPA 1
+
+kubectl create deployment nginx --image=nginx
+kubectl get deployments
+kubectl get pods
+
+### Criar Serviço NodePort – ETAPA 2
+
+kubectl expose deployment/nginx --type="NodePort" --port 80
+kubectl get services
+
+kubectl describe service nginx
+kubectl get endpoints
+
+### Acessar aplicação via NodePort
+
+curl http://127.0.0.1:$NodePort
+
+kubectl get pods -o wide
+
+http://200.100.50.100:$NodePort
+
+### Remover Serviços e Deployments
+
+kubectl delete service nginx
+kubectl get services
+
+kubectl delete deployment nginx
+kubectl get deployments

@@ -1,0 +1,55 @@
+LAB 2.2 - Gerenciar DNS
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Executar Pods através de arquivos YAML – ETAPA 1
+
+ls aula03/pods
+
+cat aula03/pods/pod1.yaml
+cat aula03/pods/pod2.yaml
+
+kubectl apply -f aula03/pods/pod1.yaml
+kubectl apply -f aula03/pods/pod2.yaml
+
+### Executar Pods através de arquivos YAML – ETAPA 2
+
+kubectl create -f https://k8s.io/examples/admin/dns/busybox.yaml
+kubectl get pods -o wide
+kubectl get pod busybox -o yaml
+
+### Testar resolução DNS de Serviços
+
+kubectl exec -ti busybox -- nslookup kubernetes
+kubectl exec -ti busybox -- nslookup kube-dns.kube-system.svc.cluster.local
+
+kubectl get service -n kube-system | grep dns
+
+### Testar resolução DNS de Pods
+
+kubectl get pods -o wide
+
+kubectl exec -ti busybox -- nslookup <IP-DO-POD-POD1>.default.pod.cluster.local
+kubectl exec -ti busybox -- nslookup <IP-DO-POD-POD2>.default.pod.cluster.local
+
+kubectl get pods -o wide
+
+kubectl exec -ti pod2 -- ping -c4 <IP-DO-POD-POD1>.default.pod.cluster.local
+kubectl exec -ti pod1 -- ping -c4 <IP-DO-POD-POD2>.default.pod.cluster.local
+
+### Executar pods, utilizando DNS personalizado – ETAPA 1
+
+cat aula03/pods/dns-pod.yaml
+kubectl apply -f aula03/pods/dns-pod.yaml
+
+kubectl get pods -o wide
+
+kubectl exec -ti dns-dexter -- nslookup <IP-DO-POD-POD1>.default.pod.cluster.local
+
+### Executar pods, utilizando DNS personalizado – ETAPA 2
+
+kubectl exec -ti dns-dexter -- ping -c4 nginx1.dexter.com.br
+
+kubectl delete -f aula03/pods
+
+kubectl delete -f https://k8s.io/examples/admin/dns/busybox.yaml

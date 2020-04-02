@@ -1,0 +1,53 @@
+LAB 2.4 - Instalar Ingress e HA Proxy
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Instalação do Helm
+
+sudo snap install helm --channel=2.16/stable --classic
+
+helm --help
+helm init
+kubectl get pod -n kube-system | grep tiller
+
+### Conceder acesso ao tiller
+
+kubectl create serviceaccount --namespace kube-system tiller
+
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+
+
+### Instalar nginx-ingress via Helm
+
+helm search ingress
+helm install stable/nginx-ingress --version 1.26.1 --name nginx-ingress --namespace kube-system
+
+kubectl get pod,deployment,svc,secret,configmap,sa,role,rolebinding -n kube-system | grep ingress
+kubectl get role,rolebinding -n kube-system | grep ingress
+
+
+### Adicionar use-proxy-protocol no configmap nginx-ingress
+
+kubectl describe configmap ingress-controller-leader-nginx -n kube-system
+
+cat aula03/install-ingress/nginx-ingress-config.yaml
+kubectl apply -f aula03/install-ingress/nginx-ingress-config.yaml
+
+kubectl describe configmap ingress-controller-leader-nginx -n kube-system
+
+
+### Alterar portas do NodePort do serviço nginx-ingress
+
+kubectl describe service nginx-ingress-controller -n kube-system
+
+cat aula03/install-ingress/nginx-ingress-nodeport.yaml
+kubectl apply -f aula03/install-ingress/nginx-ingress-nodeport.yaml
+
+kubectl describe service nginx-ingress-controller -n kube-system
+
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS BALANCER ########
+
+sudo cat /etc/haproxy/haproxy.cfg

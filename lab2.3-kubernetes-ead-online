@@ -1,0 +1,44 @@
+LAB 2.3 - Gerenciar Gerenciar LoadBalancer
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Criar ambiente LoadBalancer no Cluster Kubernetes
+
+kubectl create deployment nginx --image=nginx
+kubectl scale deployment/nginx --replicas=2
+
+kubectl expose deployment nginx --port 80 --target-port 80 --type LoadBalancer
+kubectl get all
+
+### Testar ambiente LoadBalancer – ETAPA 1
+
+POD1=$(kubectl get pod | grep nginx | awk -F" " '{print $1}' | head -1)
+echo $POD1
+
+POD2=$(kubectl get pod | grep nginx | awk -F" " '{print $1}' | tail -1)
+echo $POD2
+
+### Testar ambiente LoadBalancer – ETAPA 2
+
+echo 'POD 1 - LoadBalancer' > index.html
+kubectl cp index.html $POD1:/usr/share/nginx/html/
+
+echo 'POD 2 - LoadBalancer' > index.html
+kubectl cp index.html $POD2:/usr/share/nginx/html/
+
+### Testar ambiente LoadBalancer – ETAPA 3
+
+kubectl get service nginx
+kubectl describe service nginx
+
+LB=$(kubectl get service | grep nginx | awk -F" " '{print $3}')
+curl http://$LB (10x)
+
+### Remover Pods, Deployment e Service
+
+kubectl delete deployment nginx
+
+kubectl delete service nginx
+
+kubectl get all
+
