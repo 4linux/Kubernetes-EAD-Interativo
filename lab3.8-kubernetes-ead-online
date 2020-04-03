@@ -1,0 +1,61 @@
+LAB 3.8 - Configurar Secrets e Configmaps
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Configurar Secrets no Cluster Kubernetes
+
+cat aula05/secrets/mysql-secret.yaml
+
+echo -n "suporte" | openssl enc -base64
+echo -n "4linux" | openssl enc -base64
+
+kubectl create -f aula05/secrets/mysql-secret.yaml
+
+kubectl get secrets
+kubectl describe secret mysql-secrets
+
+cat aula05/secrets/mysql-deploy1.yaml
+kubectl create -f aula05/secrets/mysql-deploy1.yaml
+
+kubectl get all -l app=mysql
+
+### Acessar aplicação via secret
+
+POD=$(kubectl get pods -o wide | grep mysql | awk -F" " '{print $1}')
+kubectl exec $POD env
+
+sudo apt install mariadb-client -y
+
+HOST=$(kubectl get pod -o wide | grep mysql | awk -F" " '{print $6}')
+
+mysql -h $HOST -u suporte -p4linux
+
+SHOW DATABASES;
+EXIT
+
+kubectl delete -f aula05/secrets/mysql-deploy1.yaml
+
+
+### Configurar Configmaps no Cluster Kubernetes
+
+cat aula05/secrets/mysql-config.yaml
+
+kubectl create -f aula05/secrets/mysql-config.yaml
+
+kubectl get configmaps
+kubectl describe configmap mysql-config
+
+cat aula05/secrets/mysql-deploy2.yaml
+kubectl create -f aula05/secrets/mysql-deploy2.yaml
+
+kubectl get all -l app=mysql
+
+POD=$(kubectl get pods | grep mysql | awk -F" " '{print $1}')
+kubectl exec $POD env
+
+HOST=$(kubectl get pod -o wide | grep mysql | awk -F" " '{print $6}')
+
+mysql -h $HOST -u helpdesk -pdevops
+EXIT
+
+kubectl delete -f aula05/secrets/mysql-deploy2.yaml

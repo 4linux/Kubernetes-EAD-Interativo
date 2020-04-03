@@ -1,0 +1,74 @@
+LAB 3.6 - Configurar Rollback de Deploy
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Criar deploy com imagem nginx
+
+cat aula05/deploy/nginx-deploy.yaml
+kubectl create -f aula05/deploy/nginx-deploy.yaml
+
+kubectl describe deployment nginx-deploy
+kubectl get pods -l app=nginx -o wide
+
+### Verificar estado do Roolback
+
+kubectl expose deployment nginx-deploy --port 80 --target-port 80
+
+APP=$(kubectl get services | grep nginx-deploy | awk -F" " '{print $3}')
+curl $APP
+
+kubectl rollout status deployment nginx-deploy
+
+### Desfazer alteração na aplicação via Roolback
+
+kubectl set image deployment/nginx-deploy nginx=httpd --record
+
+curl $APP
+
+kubectl rollout undo deployment nginx-deploy
+kubectl get pods -l app=nginx -o wide -w
+
+### Realizar alteração no Deploy via arquivo YAML
+
+vim aula05/deploy/nginx-deploy.yaml
+....
+DE
+        image: nginx
+PARA
+        image: httpd
+        
+kubectl apply -f aula05/deploy/nginx-deploy.yaml --record
+
+### Gerenciar histórico de mudanças via Roolback
+
+kubectl get pods -l app=nginx -o wide
+curl $APP
+
+kubectl rollout history deployment nginx-deploy
+kubectl rollout history deployment nginx-deploy --revision=4
+
+kubectl rollout undo deployment nginx-deploy --to-revision=4
+kubectl rollout history deployment nginx-deploy
+
+### Realizar alteração em réplicas do Deploy via arquivo YAML
+
+vim aula05/deploy/nginx-deploy.yaml
+
+....
+DE
+  replicas: 2
+PARA
+  replicas: 3
+  
+kubectl apply -f aula05/deploy/nginx-deploy.yaml --record
+
+### Pausar e resumir mudanças via Roolback
+
+kubectl rollout pause deployment nginx-deploy
+kubectl rollout status deployment nginx-deploy
+
+kubectl rollout resume deployment nginx-deploy
+kubectl get pods -l app=nginx -o wide
+
+kubectl delete -f aula05/deploy/nginx-deploy.yaml
+kubectl delete service nginx-deploy

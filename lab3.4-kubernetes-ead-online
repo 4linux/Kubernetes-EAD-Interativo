@@ -1,0 +1,23 @@
+LAB 3.4 - Configurar Quotas
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Definir cotas de memória e CPU
+
+cat aula04/limits/dexter-limit-range-3.yaml
+kubectl create -f aula04/limits/dexter-limit-range-3.yaml
+
+kubectl describe resourcequota -n dexter-limits
+
+cat aula04/limits/limited-pod6.yaml 
+kubectl create -f aula04/limits/limited-pod6.yaml
+
+kubectl describe resourcequota -n dexter-limits
+
+cat aula04/limits/limited-pod7.yaml 
+kubectl create -f aula04/limits/limited-pod7.yaml
+
+kubectl delete -f aula04/limits/limited-pod6.yaml
+kubectl delete -f aula04/limits/limited-pod7.yaml
+kubectl delete -f aula04/limits/dexter-limit-range-3.yaml
+

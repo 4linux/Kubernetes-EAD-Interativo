@@ -1,0 +1,69 @@
+LAB 3.5 - Multiplos Schedulers e Eventos
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Visualizar scheduler padrão no Cluster
+
+kubectl get pods -n kube-system
+kubectl describe pod -n kube-system kube-scheduler-kube-master.dexter.com.br
+
+### Permitir acesso a novos Schedules no Cluster
+
+kubectl edit clusterrole system:kube-scheduler
+...
+<ADICIONAR NO FINAL>
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - watch
+  - list
+  - get
+  
+### Adicionar novos Schedules no Cluster
+
+cat aula04/schedulers/kube1-scheduler.yaml 
+cat aula04/schedulers/kube2-scheduler.yaml
+
+kubectl create -f aula04/schedulers/kube1-scheduler.yaml
+kubectl get pod -o wide -n kube-system | grep dexter-scheduler1
+
+kubectl create -f aula04/schedulers/kube2-scheduler.yaml
+kubectl get pod -o wide -n kube-system | grep dexter-scheduler2
+
+POD1=$(kubectl get pod -n kube-system | grep dexter-scheduler1 | awk -F" " '{print $1}')
+kubectl logs $POD1 -n kube-system
+
+POD2=$(kubectl get pod -n kube-system | grep dexter-scheduler2 | awk -F" " '{print $1}')
+kubectl logs $POD2 -n kube-system
+
+### Executar Pod no primeiro scheduler
+
+cat aula04/schedulers/pod1.yaml
+kubectl create -f aula04/schedulers/pod1.yaml
+
+kubectl describe pod pod1 | grep Scheduled
+kubectl get pod -o wide | grep pod1
+
+### Executar Pod no segundo scheduler
+
+cat aula04/schedulers/pod2.yaml
+kubectl create -f aula04/schedulers/pod2.yaml
+
+kubectl describe pod pod2 | grep Scheduled
+kubectl get pod -o wide | grep pod2
+
+### Visualizar eventos no Cluster
+
+kubectl get events
+
+kubectl get events -n kube-system | grep dexter-scheduler
+
+kubectl get events | grep pod1
+kubectl get events | grep pod2
+
+kubectl get events --watch
+
+kubectl delete -f aula04/schedulers/pod1.yaml 
+kubectl delete -f aula04/schedulers/pod2.yaml

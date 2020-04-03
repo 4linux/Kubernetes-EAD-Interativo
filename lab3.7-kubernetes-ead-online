@@ -1,0 +1,81 @@
+LAB 3.7 - Configurar Jobs e Cronjob
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Job não Paralelo 
+
+cat aula05/jobs/job1.yaml
+kubectl create -f aula05/jobs/job1.yaml
+
+kubectl get all -l app=job1
+
+kubectl get job
+kubectl describe job job1
+
+pod=$(kubectl get pods --selector=job-name=job1 --output=jsonpath='{.items[*].metadata.name}')
+kubectl logs $pod
+
+vim aula05/jobs/job1.yaml
+DE
+      restartPolicy: Never
+PARA
+      restartPolicy: OnFailure
+      
+kubectl delete -f aula05/jobs/job1.yaml
+kubectl apply -f aula05/jobs/job1.yaml
+
+kubectl get all -l app=job1
+kubectl describe job job1
+
+kubectl delete -f aula05/jobs/job1.yaml
+
+
+### Job com uma contagem de conclusões fixas
+
+cat aula05/jobs/job2.yaml
+
+kubectl get pods -l app=job2 -w
+kubectl create -f aula05/jobs/job2.yaml
+
+kubectl get pods -l app=job2
+kubectl describe job job2
+
+kubectl get pods -l app=job2
+
+kubectl logs job2-<hash>
+
+kubectl delete -f aula05/jobs/job2.yaml
+
+
+### Jobs paralelos com uma fila de trabalho
+
+cat aula05/jobs/job3.yaml
+
+kubectl get pods -l app=job3 -w
+kubectl create -f aula05/jobs/job3.yaml
+
+kubectl get pods -l app=job3
+kubectl describe job job3
+
+kubectl get pods -l app=job3
+
+kubectl logs job3-<hash>
+
+kubectl delete -f aula05/jobs/job3.yaml
+
+### Limpar jobs concluídos automaticamente
+
+cat aula05/jobs/job4.yaml
+kubectl create -f aula05/jobs/job4.yaml
+
+kubectl get cronjob
+kubectl describe cronjob job4
+
+kubectl get jobs --watch
+
+kubectl get cronjob job4
+
+kubectl get pods
+kubectl logs job4-<HASH>
+
+kubectl delete -f aula05/jobs/job4.yaml

@@ -1,0 +1,70 @@
+LAB 3.1 - Configurar Labels e Seletores
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Adicionar Labels
+kubectl get nodes
+
+kubectl label node kube-node01.dexter.com.br cloud=AWS
+kubectl label node kube-node02.dexter.com.br cloud=AZURE
+
+kubectl get node kube-node01.dexter.com.br --show-labels
+kubectl get node kube-node02.dexter.com.br --show-labels
+
+### Configurar Labels – ETAPA 1
+
+cat aula04/labels/nginx-deploy.yaml 
+kubectl create -f aula04/labels/nginx-deploy.yaml
+
+kubectl get pods -o wide | grep nginx-deploy
+kubectl edit deploy nginx-deploy1
+      nodeSelector:
+        cloud: AWS
+        
+### Configurar Labels – ETAPA 2
+
+kubectl get pods -o wide | grep nginx-deploy
+
+kubectl edit deploy nginx-deploy2
+      nodeSelector:
+        cloud: AZURE
+        
+kubectl get pods -o wide
+kubectl delete -f aula04/labels/nginx-deploy.yaml
+
+
+### Gerenciar Seletores
+
+cat aula04/labels/nginx-replication.yaml
+
+#Adicionar as linhas selector:, matchLabels: e app: nginx
+
+vim aula04/labels/nginx-replication.yaml
+
+...
+
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+
+kubectl create -f aula04/labels/nginx-replication.yaml
+      
+kubectl get pod -o wide | grep nginx-deploy
+kubectl edit deploy nginx-deploy
+
+                - AWS
+            Weight: 10
+
+                - AZURE
+            weight: 90
+            
+kubectl get pod -o wide | grep nginx-deploy
+
+kubectl delete -f aula04/labels/nginx-replication.yaml 

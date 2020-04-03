@@ -1,0 +1,60 @@
+LAB 3.3 - Configurar Limites
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Definir Limites de Recursos Padrão
+
+kubectl create namespace dexter-limits
+
+cat aula04/limits/dexter-limit-range-1.yaml
+kubectl create -f aula04/limits/dexter-limit-range-1.yaml
+
+kubectl describe limitrange -n dexter-limits
+
+### Testar limites na execução de Pods
+
+cat aula04/limits/limited-pod1.yaml
+kubectl create -f aula04/limits/limited-pod1.yaml
+
+kubectl describe pod limited-pod1 -n dexter-limits | grep Limits -A 5
+kubectl describe node kube-node01.dexter.com.br | grep limited
+
+### Testar resources na execução de Pods
+
+cat aula04/limits/limited-pod2.yaml
+kubectl create -f aula04/limits/limited-pod2.yaml
+
+kubectl describe pod limited-pod2 -n dexter-limits | grep Limits -A 5
+
+kubectl describe node kube-node01.dexter.com.br | grep limited
+
+#### Ultrapassar limites de CPU
+
+cat aula04/limits/limited-pod3.yaml
+kubectl create -f aula04/limits/limited-pod3.yaml
+
+kubectl get pod -o wide -n dexter-limits
+kubectl describe pod limited-pod3 -n dexter-limits
+
+kubectl delete -f aula04/limits/limited-pod1.yaml
+kubectl delete -f aula04/limits/limited-pod2.yaml
+kubectl delete -f aula04/limits/limited-pod3.yaml
+kubectl delete -f aula04/limits/dexter-limit-range-1.yaml
+
+### Definir restrições mínimas e máximas de recursos
+
+cat aula04/limits/dexter-limit-range-2.yaml
+kubectl create -f aula04/limits/dexter-limit-range-2.yaml
+
+cat aula04/limits/limited-pod4.yaml
+kubectl create -f aula04/limits/limited-pod4.yaml
+
+kubectl describe pod limited-pod4 -n dexter-limits | grep Limits -A 5
+
+kubectl describe node kube-node01.dexter.com.br | grep limited
+
+cat aula04/limits/limited-pod5.yaml
+kubectl create -f aula04/limits/limited-pod5.yaml
+
+kubectl delete -f aula04/limits/limited-pod4.yaml
+kubectl delete -f aula04/limits/dexter-limit-range-2.yaml

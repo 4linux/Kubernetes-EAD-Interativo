@@ -1,0 +1,50 @@
+LAB 3.2 - Configurar Daemonsets
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Visualizar Daemonsets
+
+kubectl get daemonset --all-namespaces
+
+kubectl describe daemonset calico-node -n kube-system
+
+kubectl get pod -n kube-system -o wide | grep kube-proxy
+kubectl get pod -n kube-system -o wide | grep calico-node
+kubectl get pod -n kube-system -o wide | grep nginx
+
+### Implementar Daemonset no Cluster
+
+cat aula04/daemonset/node_exporter.yaml
+
+#Alterar apiVersion para apps/v1
+#Adicionar as linhas selector:, matchLabels: e app: nginx
+
+vim aula04/daemonset/node_exporter.yaml
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+spec:
+  selector:
+    matchLabels:
+
+
+kubectl create -f aula04/daemonset/node_exporter.yaml
+
+kubectl get daemonset node-exporter
+kubectl describe daemonset node-exporter
+
+### Ativar e desativar Daemonset através de Labels
+
+kubectl label node kube-node01.dexter.com.br monitoring=prometheus
+kubectl label node kube-node02.dexter.com.br monitoring=prometheus
+
+kubectl get pods -o wide
+
+kubectl label node kube-node01.dexter.com.br monitoring=zabbix --overwrite
+kubectl get pods -o wide
+
+kubectl label node kube-node02.dexter.com.br monitoring=zabbix --overwrite
+kubectl get pods -o wide
