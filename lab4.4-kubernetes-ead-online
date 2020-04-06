@@ -1,0 +1,53 @@
+LAB 4.4 - Gerenciar ReplicaSet e StatefulSets
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Executar Pod com volume emptyDir
+
+cat aula06/pod/pod1.yaml
+kubectl apply -f aula06/pod/pod1.yaml
+
+kubectl get pod pod1
+
+kubectl exec -it pod1 -- df -Th
+kubectl exec -it pod1 -- ls /backup
+
+kubectl exec -it pod1 -- cp /etc/fstab /backup
+kubectl exec -it pod1 -- ls /backup
+
+kubectl get pod pod1 -o yaml | grep uid
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE NODE 01 ########
+
+sudo su -
+
+cd /var/lib/kubelet/pods/<HASH>/volumes/kubernetes.io~empty-dir/
+
+ls backup-volume
+cp /etc/hosts backup-volume/
+ls backup-volume
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTR ########
+
+kubectl exec -it pod1 -- df -Th
+kubectl exec -it pod1 -- ls /backup
+
+kubectl delete -f aula06/pod/pod1.yaml
+
+### Executar Pod com volume hostPath
+
+cat aula06/pod/pod2.yaml
+
+ssh kube-node02 mkdir data
+
+kubectl apply -f aula06/pod/pod2.yaml
+kubectl get pod pod2
+
+kubectl exec -it pod2 -- df -Th
+kubectl exec -it pod2 -- ls /backup
+
+scp /etc/hostname kube-node02:data
+kubectl exec -it pod2 -- cat /backup/hostname
+
+kubectl delete -f aula06/pod/pod2.yaml
+

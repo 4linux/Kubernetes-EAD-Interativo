@@ -1,0 +1,61 @@
+LAB 4.2 - Gerenciar horizontal pod autoscaler
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Instalar metrics server no Cluster
+
+helm install stable/metrics-server \
+--set rbac.create=true \
+--set args[0]="--kubelet-insecure-tls=true" \
+--set args[1]="--kubelet-preferred-address-types=InternalIP" \
+--set args[2]="--v=2" \
+--name metrics-server
+
+kubectl get pods -l app=metrics-server
+kubectl get --raw /apis/metrics.k8s.io/
+
+### Coletar métricas de Nós e Pods
+
+kubectl top nodes
+
+kubectl apply -f aula05/secrets/mysql-deploy1.yaml
+kubectl top pod -l app=mysql
+
+POD=$(kubectl get pod | grep mysql | awk -F" " '{print $1}')
+kubectl top pod $POD --containers
+
+kubectl delete -f aula05/secrets/mysql-deploy1.yaml
+
+### Criando um horizontal pod autoscaler
+
+#TERMINAL 1
+kubectl apply -f https://k8s.io/examples/application/php-apache.yaml
+
+kubectl get pods -l run=php-apache
+
+kubectl autoscale deployment/php-apache --min=1 --max=5 --cpu-percent=50
+
+kubectl get hpa
+
+kubectl describe hpa php-apache
+
+kubectl get pods -l run=php-apache
+
+kubectl get service -l run=php-apache
+
+#TERMINAL 2
+kubectl run client --generator=run-pod/v1 --image=busybox /bin/sh
+
+while true; do wget -q -O - http://php-apache; done
+
+#TERMINAL 1
+kubectl get hpa -w
+kubectl get pods -l run=php-apache
+
+kubectl delete hpa php-apache
+
+kubectl delete -f https://k8s.io/examples/application/php-apache.yaml
+
+#TERMINAL 2
+CTRL + C
+exit

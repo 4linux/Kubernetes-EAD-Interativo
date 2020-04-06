@@ -1,0 +1,42 @@
+LAB 4.1 - Gerenciar réplicas de aplicações em Deploy
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Gerenciar réplicas no Deploy
+
+cat aula05/deploy/nginx-deploy.yaml
+kubectl apply -f aula05/deploy/nginx-deploy.yaml
+
+kubectl get pods -l app=nginx
+
+kubectl scale deployment/nginx-deploy --replicas=2
+kubectl get pods -l app=nginx
+
+
+### Alterar réplicas no Deploy via edição
+
+kubectl edit deployment/nginx-deploy
+spec:
+....
+DE:
+ replicas: 2
+PARA:
+ replicas: 4
+
+kubectl get pods -l app=nginx
+
+
+### Alterar réplicas no Deploy via arquivo YAML
+
+kubectl get deployment nginx-deploy -o yaml > /tmp/ng-deploy.yaml
+
+vim /tmp/ng-deploy.yaml
+spec:
+....
+ replicas: 1
+
+kubectl replace -f /tmp/ng-deploy.yaml
+
+kubectl get pods -l app=nginx
+
+kubectl delete -f aula05/deploy/nginx-deploy.yaml

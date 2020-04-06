@@ -1,0 +1,68 @@
+LAB 4.6 - Volume persistente NFS
+
+######## EXECUTAR TODOS OS COMANDOS NAS VMS KUBE NODE 01 e NODE 02 ########
+
+sudo apt install nfs-common -y
+
+sudo showmount -e balancer
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Criar Volume Persistente NFS
+
+cat aula06/nfs/volume-nfs.yaml
+kubectl apply -f aula06/nfs/volume-nfs.yaml
+
+kubectl get pv
+
+kubectl describe pv nfs-volume
+
+### Criar Volume Persistente Claim
+
+cat aula06/nfs/claim-nfs.yaml
+kubectl apply -f aula06/nfs/claim-nfs.yaml
+
+kubectl get pvc
+
+kubectl describe pvc pvc-nfs
+
+### Executar Pod com volume Persistente
+
+cat aula06/nfs/nginx-deploy2.yaml
+kubectl apply -f aula06/nfs/nginx-deploy2.yaml
+
+kubectl get pods -l app=nginx -o wide
+
+ssh kube-node01 sudo df -Th | grep nfs
+
+POD=$(kubectl get pods | grep nginx-deploy | awk -F" " '{print $1}')
+kubectl exec -it $POD -- df -Th
+
+HOST=$(kubectl get pod -o wide | grep nginx-deploy | awk -F" " '{print $6}')
+
+curl $HOST
+
+echo 'Curso Kubernetes 4Linux' > index.html
+scp index.html balancer:data/
+
+curl $HOST
+
+kubectl get pod -l app=nginx -o wide
+
+kubectl edit deployment nginx-deploy
+DE:
+      nodeSelector:
+        cloud: AWS
+PARA:
+      nodeSelector:
+        cloud: AZURE
+        
+kubectl get pods -l app=nginx -o wide
+
+ssh kube-node02 sudo df -Th | grep nfs
+
+HOST=$(kubectl get pod -o wide | grep nginx-deploy | awk -F" " '{print $6}')
+curl $HOST
+
+kubectl delete -f aula06/nfs/nginx-deploy2.yaml
+

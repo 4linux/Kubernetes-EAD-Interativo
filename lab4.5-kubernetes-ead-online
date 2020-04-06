@@ -1,0 +1,52 @@
+LAB 4.5 - Volume persistente no Kubernetes
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Criar Storage Class
+
+kubectl apply -f aula06/storage/storage-class.yaml
+
+kubectl get sc
+
+kubectl describe sc local-storage
+
+### Criar Volume Persistente
+
+cat aula06/local/volume-local.yaml
+kubectl apply -f aula06/local/volume-local.yaml
+
+kubectl get pv
+kubectl describe pv pv-local
+
+ssh kube-node01 mkdir data
+
+### Criar Volume Persistente Claim
+
+cat aula06/local/claim.local.yaml
+kubectl apply -f aula06/local/claim.local.yaml
+
+kubectl get pvc
+
+kubectl describe pvc volume-claim-local
+
+### Executar Pod com volume Persistente
+
+cat aula06/local/nginx-deploy1.yaml
+kubectl apply -f aula06/local/nginx-deploy1.yaml
+
+kubectl get pod -l app=nginx -o wide
+
+POD=$(kubectl get pods | grep nginx-deploy | awk -F" " '{print $1}')
+
+kubectl exec -it $POD -- mount | grep nginx
+
+HOST=$(kubectl get pods -o wide | grep nginx-deploy | awk -F" " '{print $6}')
+
+curl $HOST
+
+echo 'Servidor Nginx - Node 01' > index.html
+scp index.html kube-node01:data/
+
+curl $HOST
+
+kubectl delete -f aula06/local/nginx-deploy1.yaml

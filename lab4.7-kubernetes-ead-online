@@ -1,0 +1,67 @@
+LAB 4.7 - Configurar Volumes com Configmaps
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Criar Secret para banco MySQL
+
+cat aula06/configmap/mysql-secret.yaml
+kubectl apply -f aula06/configmap/mysql-secret.yaml
+
+kubectl get secrets
+
+kubectl describe secret mysql-secrets
+
+### Criar Configmap para banco MySQL
+
+cat aula06/configmap/mysql-configmap1.yaml
+kubectl apply -f aula06/configmap/mysql-configmap1.yaml
+
+kubectl get configmaps
+
+kubectl describe configmap mysql-dexter-config
+
+cat aula06/configmap/mysql-configmap2.yaml
+kubectl apply -f aula06/configmap/mysql-configmap2.yaml
+
+kubectl get configmaps
+
+kubectl describe configmap mysql-dexter-db
+
+### Executar Deploy com Volume e Configmap
+
+#Adicionar as linhas selector:, matchLabels: e app: mysql
+
+vim aula06/configmap/mysql-deploy.yaml
+
+...
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+
+cat aula06/configmap/mysql-deploy.yaml
+kubectl apply -f aula06/configmap/mysql-deploy.yaml
+
+kubectl get pod -l app=mysql
+
+POD=$(kubectl get pods -o wide | grep mysql | awk -F" " '{print $1}')
+
+kubectl exec -it $POD -- ls /etc/mysql/conf.d
+kubectl exec -it $POD -- cat /etc/mysql/conf.d/dexter.cnf
+kubectl exec $POD env
+kubectl exec -it $POD -- ls /var/lib/mysql/dexter
+
+HOST=$(kubectl get pod -o wide | grep mysql | awk -F" " '{print $6}')
+mysql -h $HOST -u suporte -p4linux -D dexter
+
+SHOW DATABASES;
+EXIT
+
+kubectl delete -f aula06/configmap/mysql-deploy.yaml
+

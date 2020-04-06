@@ -1,0 +1,64 @@
+LAB 4.3 - Gerenciar ReplicaSet e StatefulSets
+
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+
+### Gerenciar ReplicaSet
+
+cat aula05/replicaset/nginx-replicaset.yaml
+kubectl apply -f aula05/replicaset/nginx-replicaset.yaml
+
+kubectl get rs -l app=web
+
+kubectl describe rs nginx-replicas
+
+kubectl edit rs nginx-replicas
+....
+DE:
+spec:
+  replicas: 3
+PARA:
+spec:
+  replicas: 4
+  
+kubectl get pods -l app=web
+
+POD=$(kubectl get pods -l app=web | awk -F" " '{print $1}' | tail -1)
+echo $POD
+
+kubectl delete pod $POD
+kubectl get pods -l app=web
+
+kubectl delete -f aula05/replicaset/nginx-replicaset.yaml
+
+### Gerenciar StatefulSets
+
+cat aula05/statefulset/httpd-service.yaml
+kubectl apply -f aula05/statefulset/httpd-service.yaml
+
+kubectl describe service httpd-service
+
+cat aula05/statefulset/httpd-statefulset.yaml
+kubectl apply -f aula05/statefulset/httpd-statefulset.yaml
+
+kubectl get statefulset
+kubectl describe statefulset apache-http
+
+kubectl get pods -l app=httpd
+
+kubectl scale statefulset apache-http --replicas=4
+kubectl describe statefulset apache-http
+
+kubectl get pods -l app=httpd
+
+kubectl patch sts apache-http -p '{"spec":{"replicas":2}}'
+kubectl get statefulset
+
+kubectl describe statefulset apache-http
+kubectl get pods -l app=httpd
+
+kubectl patch statefulset apache-http --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value":"httpd:2-alpine"}]'
+
+kubectl describe statefulset apache-http
+
+kubectl delete statefulset apache-http
+kubectl delete service httpd-service
