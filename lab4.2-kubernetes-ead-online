@@ -44,7 +44,7 @@ kubectl get pods -l run=php-apache
 kubectl get service -l run=php-apache
 
 #TERMINAL 2
-kubectl run client --generator=run-pod/v1 --image=busybox /bin/sh
+kubectl run --rm -ti busybox --generator=run-pod/v1 --image=busybox /bin/sh
 
 while true; do wget -q -O - http://php-apache; done
 
