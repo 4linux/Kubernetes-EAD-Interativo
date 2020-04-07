@@ -1,0 +1,26 @@
+LAB 5.6 - Manutenção no Cluster Kubernetes
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Desativar Scheduling
+
+kubectl describe node kube-node01.dexter.com.br
+
+kubectl cordon kube-node01.dexter.com.br
+
+kubectl create deploy nginx --image nginx
+kubectl scale deploy nginx --replicas=5
+
+kubectl get pods -o wide
+
+kubectl uncordon kube-node01.dexter.com.br
+
+### Evacuar Node
+
+kubectl drain kube-node02.dexter.com.br --ignore-daemonsets
+
+kubectl get pods -o wide
+
+kubectl uncordon kube-node02.dexter.com.br
+kubectl delete deploy nginx
+

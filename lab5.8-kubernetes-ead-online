@@ -1,0 +1,25 @@
+LAB 5.8 - Kubernetes Dashboard
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Instalar o Kubernetes Dashboard
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta6/aio/deploy/recommended.yaml
+
+kubectl get pods -l k8s-app=kubernetes-dashboard -n kubernetes-dashboard
+
+kubectl get svc -l k8s-app=kubernetes-dashboard -n kubernetes-dashboard
+
+kubectl -n kubernetes-dashboard port-forward --address 0.0.0.0 $POD_NAME 8443:8443 &
+
+cat aula08/dashboard/admin-user.yaml
+
+kubectl apply -f aula08/dashboard/admin-user.yaml
+
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+
+ANOTE o Token!
+
+Acesse o endereço https://200.100.50.100:8443
+
+Selecione a opção Token e cole o hash que você copiou.

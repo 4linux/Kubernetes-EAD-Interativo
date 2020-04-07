@@ -1,0 +1,60 @@
+LAB 5.3 - Autorizar client no Cluster
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Criar Role e RoleBinding
+
+cat aula07/auth-user-account/role-devops.yaml
+kubectl apply -f aula07/auth-user-account/role-devops.yaml
+
+kubectl get role -n projeto 
+kubectl describe role devops-role -n projeto
+
+kubectl get rolebinding -n projeto
+kubectl describe rolebinding devops-role-binding -n projeto
+
+### Criar ClusterRole e ClusterRoleBinding
+
+cat aula07/auth-user-account/cluster-role-devops.yaml
+kubectl apply -f aula07/auth-user-account/cluster-role-devops.yaml
+
+kubectl get clusterrole devops-cluster-role -n projeto
+kubectl describe clusterrole devops-cluster-role -n projeto
+
+kubectl get clusterrolebinding cluster-volumes -n projeto
+kubectl describe clusterrolebinding cluster-volumes -n projeto
+
+######## EXECUTAR TODOS OS COMANDOS NA VM BALANCER ########
+
+cat /opt/wordpress-deploy/mysql-secret.yaml
+kubectl apply -f /opt/wordpress-deploy/mysql-secret.yaml
+
+cat /opt/wordpress-deploy/pv.yaml 
+kubectl apply -f /opt/wordpress-deploy/pv.yaml
+
+kubectl get secrets
+kubectl get pv
+
+cat /opt/wordpress-deploy/pvc.yaml 
+kubectl apply -f /opt/wordpress-deploy/pvc.yaml
+
+cat /opt/wordpress-deploy/mysql-deployment.yaml 
+kubectl apply -f /opt/wordpress-deploy/mysql-deployment.yaml
+
+cat /opt/wordpress-deploy/wordpress-deployment.yaml 
+kubectl apply -f /opt/wordpress-deploy/wordpress-deployment.yaml
+
+kubectl get pvc
+kubectl get pods,deployments,services
+
+cat /opt/wordpress-deploy/ingress-wordpress.yaml 
+kubectl apply -f /opt/wordpress-deploy/ingress-wordpress.yaml
+
+kubectl get ing
+
+elinks http://wordpress.dexter.com.br
+
+kubectl delete -f /opt/wordpress-deploy/
+
+kubectl get secrets,pv,pvc
+kubectl get deployments,services,ing

@@ -1,0 +1,42 @@
+LAB 5.5 - Configurar Liveness e Readiness
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Configurar livenessProbe
+
+cat aula08/liveness/liveness-exec.yaml
+kubectl apply -f aula08/liveness/liveness-exec.yaml
+
+kubectl get pods -l test=liveness
+
+kubectl get events | grep liveness-exec
+
+cat aula08/liveness/liveness-http.yaml
+kubectl apply -f aula08/liveness/liveness-http.yaml
+
+kubectl get pods -l test=liveness -o wide
+kubectl get events | grep liveness-http
+
+curl 192.168.78.248:8080/server
+
+kubectl delete -f aula08/liveness
+
+### Configurar readinessProbe
+
+cat aula08/readiness/readiness-exec.yaml
+kubectl apply -f aula08/readiness/readiness-exec.yaml
+
+kubectl get pods -l test=readiness
+
+kubectl get events | grep readiness-exec
+
+kubectl exec -it readiness-exec -- touch /tmp/healthy
+kubectl get pods -l test=readiness
+
+cat aula08/readiness/readiness-http.yaml
+kubectl apply -f aula08/readiness/readiness-http.yaml
+
+kubectl get pods -l test=readiness
+kubectl get events | grep readiness-http
+
+kubectl delete -f aula08/readiness

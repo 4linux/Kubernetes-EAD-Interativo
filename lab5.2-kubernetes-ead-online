@@ -1,0 +1,67 @@
+LAB 5.2 - Criar certificados e autenticar cliente
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Criar certificados para o cliente
+
+mkdir -p ~/.kube/users
+cd ~/.kube/users
+
+openssl genrsa -out devops.key 2048
+
+openssl req -new -key devops.key -out devops.csr -subj "/CN=devops/O=devops/O=dexter.com.br"
+
+sudo openssl x509 -req -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -days 365 -in devops.csr -out devops.crt
+
+kubectl config set-credentials devops --client-certificate=devops.crt --client-key=devops.key
+
+kubectl config view
+
+### Gerenciar contextos do Cluster
+
+kubectl create namespace projeto
+
+kubectl config get-contexts
+
+kubectl config set-context devops --cluster=kubernetes --user=devops --namespace=projeto
+kubectl config get-contexts
+
+kubectl config view --flatten --minify | awk '/contexts:/{exit}1' > config
+
+cat config
+
+cat /home/suporte/aula07/context/config-devops
+
+cat /home/suporte/aula07/context/config-devops >> config
+
+cat config
+
+scp config devops.crt devops.key devops@balancer:
+cd
+
+######## EXECUTAR TODOS OS COMANDOS NA VM Balancer ########
+
+#Logar com o usuário root
+
+export VERSION=v1.16.8
+export ARCH=amd64
+
+curl -sSL https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubectl > kubectl
+
+install -o root -g root -m 0755 ./kubectl /usr/bin/kubectl
+
+su - devops
+
+mkdir .certs
+mv devops* .certs
+
+kubectl config view --kubeconfig=config
+kubectl config get-contexts --kubeconfig=config
+
+kubectl get pods -n projeto --kubeconfig=config
+
+ls .kube
+mv config .kube
+
+kubectl get pods,deployments,services
+kubectl get secrets,pv,pvc,ing

@@ -1,0 +1,66 @@
+LAB 5.1 - Autenticando usuário de serviço
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Criar usuário de serviço
+
+cat aula07/auth-service-account/user-account.yaml 
+kubectl apply -f aula07/auth-service-account/user-account.yaml 
+
+kubectl get serviceaccount operator -o yaml
+
+kubectl get secret
+
+SEC=$(kubectl get secret | grep operator | awk -F" " '{ print $1}')
+
+kubectl get secret $SEC -o yaml
+
+### Executar container com a permissão do usuário
+
+cat aula07/auth-service-account/kubectl-client.yaml
+
+kubectl apply -f aula07/auth-service-account/kubectl-client.yaml 
+
+kubectl get pods kubectl-client -o yaml | grep mountPath
+
+kubectl exec -it kubectl-client -- ls /var/run/secrets/kubernetes.io/serviceaccount
+
+kubectl exec -it kubectl-client -- kubectl get pods
+kubectl exec -it kubectl-client -- kubectl get services
+kubectl exec -it kubectl-client -- kubectl get nodes
+
+### Criar Role e RoleBinding
+
+cat aula07/auth-service-account/role-operator.yaml
+kubectl apply -f aula07/auth-service-account/role-operator.yaml 
+
+cat aula07/auth-service-account/role-binding-operator.yaml
+kubectl apply -f aula07/auth-service-account/role-binding-operator.yaml 
+
+kubectl get roles
+kubectl describe role operator-role 
+
+kubectl get rolebindings
+kubectl describe rolebinding operator-role-binding
+
+kubectl exec -it kubectl-client -- kubectl get pods
+kubectl exec -it kubectl-client -- kubectl get services
+
+kubectl get clusterrole | less
+
+kubectl describe clusterrole system:node
+
+### Criar ClusterRole e ClusterRoleBinding
+
+cat aula07/auth-service-account/cluster-role-binding.yaml
+kubectl apply -f aula07/auth-service-account/cluster-role-binding.yaml
+
+kubectl get clusterrolebinding cluster-nodes
+kubectl describe clusterrolebinding cluster-nodes
+
+kubectl exec -it kubectl-client -- kubectl get nodes
+
+kubectl delete -f aula07/auth-service-account/kubectl-client.yaml
+
+
+

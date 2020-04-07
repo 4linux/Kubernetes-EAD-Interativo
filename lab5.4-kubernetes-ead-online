@@ -1,0 +1,54 @@
+LAB 5.4 - Gerenciar logs no Kubernetes
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Visualizar logs de Deploy/Pod
+
+#Adicionar as linhas selector:, matchLabels: e app: mysql
+
+vim aula08/logs/mysql-deploy.yaml
+
+...
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+
+cat aula08/logs/mysql-deploy.yaml
+kubectl apply -f aula08/logs/mysql-deploy.yaml
+
+kubectl logs --help
+
+kubectl logs deployment/mysql
+kubectl logs -f -l app=mysql --all-containers=true
+
+POD=$(kubectl get pod | grep mysql | awk -F" " '{print $1}')
+
+kubectl logs $POD
+
+kubectl logs --tail=10 $POD
+
+kubectl logs --since=1h $POD
+
+### Visualizar logs no sistema de arquivos
+
+sudo su - 
+cd /var/log/containers/
+
+ls
+
+cat calico-node<TAB>
+cat coredns-<TAB>
+
+cat etcd-kube-master.dexter.com.br_kube-system_etcd-<TAB>
+cat kube-proxy-<TAB>
+
+cat kube-apiserver-kube-master.dexter.com.br_kube-system_kube-apiserver-<TAB>
+cat kube-controller-manager-kube-master.dexter.com.br_kube-system_kube-controller-manager-<TAB>
+
+cat kube-scheduler-kube-master.dexter.com.br_kube-system_kube-scheduler-<TAB>
+
+exit
+kubectl delete -f aula08/logs/mysql-deploy.yaml

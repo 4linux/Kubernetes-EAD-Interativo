@@ -1,0 +1,111 @@
+LAB 5.7 - Troubleshooting Cluster e Pods
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+### Serviços e Swap
+
+sudo systemctl status kubelet
+
+sudo systemctl status docker
+
+sudo sed -i '/ swap / s/^/#/' /etc/fstab 
+sudo swapoff -a
+sudo swapon -s
+
+### Verificar estado do Nó no Cluster
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE NODE 02 ########
+
+sudo systemctl stop kubelet
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+kubectl get nodes
+kubectl describe node kube-node02.dexter.com.br
+
+ping -c4 kube-node02.dexter.com.br
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE NODE 02 ########
+
+sudo systemctl start kubelet
+
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
+
+kubectl get nodes
+kubectl describe kube-node02.dexter.com.br
+
+### Node Scheduler
+
+kubectl get pods -n kube-system
+
+POD=$(kubectl get pod -n kube-system | grep dexter-scheduler1 | awk -F" " '{print $1}')
+
+kubectl logs $POD -n kube-system
+
+### Troubleshooting Pods
+
+#Status ImagePullErr
+
+cat aula08/troubleshooting/pod1.yaml
+kubectl apply -f aula08/troubleshooting/pod1.yaml
+
+kubectl get pods pod1
+kubectl describe pod pod1 | grep Failed
+
+kubectl get events | grep "Failed to pull image"
+kubectl logs pod1
+
+vim aula08/troubleshooting/pod1.yaml
+ALTERAR:
+  - image: nginx:1.16
+  
+kubectl apply -f aula08/troubleshooting/pod1.yaml
+kubectl get pods pod1
+
+kubectl delete -f aula08/troubleshooting/pod1.yaml
+
+#Status CrashLoopBackOff
+
+cat aula08/troubleshooting/pod2.yaml
+kubectl apply -f aula08/troubleshooting/pod2.yaml
+
+kubectl get pods pod2
+kubectl describe pods pod2 | grep Reason -A 5
+
+kubectl get events
+kubectl get events | grep "failed container"
+
+vim aula08/troubleshooting/pod2.yaml +$
+ADICIONAR:
+    command: ["/bin/bash", "-ec", "while :;do echo '.'; sleep 5 ;done"]
+  restartPolicy: Never 
+
+kubectl replace -f aula08/troubleshooting/pod2.yaml --force
+kubectl get pods pod2
+
+kubectl delete -f aula08/troubleshooting/pod2.yaml
+
+#Status Pending
+
+cat aula08/troubleshooting/pod3.yaml
+kubectl apply -f aula08/troubleshooting/pod3.yaml
+
+kubectl get pods pod3
+kubectl describe pod pod3 | grep Events -A 5
+
+kubectl get events | grep pod3
+kubectl get events | grep FailedScheduling
+
+kubectl get pods pod3 -o yaml > /tmp/pod3-temp.yaml
+
+vim /tmp/pod3-temp.yaml 
+DE:
+        memory: 9999Mi
+PARA:
+        memory: 999Mi
+        
+kubectl replace -f /tmp/pod3-temp.yaml --force
+
+kubectl get pods pod3
+
+kubectl delete -f aula08/troubleshooting/pod3.yaml
