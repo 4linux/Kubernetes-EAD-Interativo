@@ -1,8 +1,8 @@
 LAB 1.5 - Atualizando o Cluster Kubernetes
 
-######## EXECUTAR OS COMANDOS NA VMS KUBE MASTER ########
+######## EXECUTAR OS COMANDOS NA VM KUBE MASTER ########
 
-Atualizar o kubeadmin no Master – ETAPA 1
+Atualizar o kubeadmin na Master
 
 cd /tmp
 
@@ -16,7 +16,12 @@ Realizar planejamento de atualização do cluster Kubernetes
 sudo kubeadm upgrade plan
 sudo kubeadm upgrade apply v1.16.15
 
-Atualizar o kubelet no Master
+Atualizar o kubectl na Master
+
+curl -sSL https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubectl > kubectl
+sudo install -o root -g root -m 0755 ./kubectl /usr/bin/kubectl
+
+Atualizar o kubelet na Master
 
 curl -sSL https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubelet > kubelet
 sudo install -o root -g root -m 0755 ./kubelet /usr/bin/kubelet
