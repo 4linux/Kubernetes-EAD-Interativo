@@ -1,6 +1,6 @@
 LAB 1.2 - Instalação e Configuração do Kubernetes
 
-######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER, NODE 01 e 02 ########
 
 Baixe a chave pública para configurar o repositório do Kubernetes:
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
