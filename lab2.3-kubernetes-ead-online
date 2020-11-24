@@ -2,12 +2,29 @@ LAB 2.3 - Gerenciar Gerenciar LoadBalancer
 
 ######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
 
+### Instalar o Metallb
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+
+kubectl get po -n metallb-system
+
+cat metallb/metallb-config.yaml
+
+kubectl apply -f metallb/metallb-config.yaml
+
+kubectl describe cm config -n metallb-system
+
+
 ### Criar ambiente LoadBalancer no Cluster Kubernetes
 
 kubectl create deployment nginx --image=nginx
 kubectl scale deployment/nginx --replicas=2
 
-kubectl expose deployment nginx --port 80 --target-port 80 --type LoadBalancer
+kubectl expose deployment nginx --port 80 --target-port 80 --type LoadBalancerkub c
 kubectl get all
 
 ### Testar ambiente LoadBalancer – ETAPA 1
