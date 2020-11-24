@@ -21,10 +21,10 @@ kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"templat
 
 ### Instalar nginx-ingress via Helm
 
-helm repo add nginx https://helm.nginx.com/stable
+helm repo add hkube https://hkube.io/helm/
 
 helm search ingress
-helm install --name nginx-ingress nginx/nginx-ingress --version 0.7.1 --namespace kube-system
+helm install --name nginx-ingress hkube/nginx-ingress --version 1.31.1002 --namespace kube-system
 
 kubectl get pod,deployment,svc -n kube-system | grep ingress
 kubectl get secret,configmap,sa -n kube-system | grep ingress
