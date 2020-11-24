@@ -21,33 +21,10 @@ kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"templat
 
 ### Instalar nginx-ingress via Helm
 
+helm repo add nginx https://helm.nginx.com/stable
+
 helm search ingress
-helm install stable/nginx-ingress --version 1.26.1 --name nginx-ingress --namespace kube-system
+helm install --name nginx-ingress nginx/nginx-ingress --version 0.7.1 --namespace kube-system
 
-kubectl get pod,deployment,svc,secret,configmap,sa,role,rolebinding -n kube-system | grep ingress
-kubectl get role,rolebinding -n kube-system | grep ingress
-
-
-### Adicionar use-proxy-protocol no configmap nginx-ingress
-
-kubectl describe configmap ingress-controller-leader-nginx -n kube-system
-
-cat aula03/install-ingress/nginx-ingress-config.yaml
-kubectl apply -f aula03/install-ingress/nginx-ingress-config.yaml
-
-kubectl describe configmap ingress-controller-leader-nginx -n kube-system
-
-
-### Alterar portas do NodePort do serviço nginx-ingress
-
-kubectl describe service nginx-ingress-controller -n kube-system
-
-cat aula03/install-ingress/nginx-ingress-nodeport.yaml
-kubectl apply -f aula03/install-ingress/nginx-ingress-nodeport.yaml
-
-kubectl describe service nginx-ingress-controller -n kube-system
-
-
-######## EXECUTAR TODOS OS COMANDOS NA VMS BALANCER ########
-
-sudo cat /etc/haproxy/haproxy.cfg
+kubectl get pod,deployment,svc -n kube-system | grep ingress
+kubectl get secret,configmap,sa -n kube-system | grep ingress
