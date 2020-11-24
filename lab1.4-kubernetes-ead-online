@@ -31,12 +31,12 @@ Obter informações sobre os Nó do Cluster
 kubectl get nodes
 kubectl get pods -n kube-system
 
-kubectl describe node node1
-kubectl describe node node2
+kubectl describe node node1.dexter.com.br
+kubectl describe node node2.dexter.com.br
 
 Remover Nó no Cluster
 
-kubectl delete node node2
+kubectl delete node node2.dexter.com.br
 kubectl get nodes
 
 
