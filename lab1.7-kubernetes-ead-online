@@ -67,7 +67,5 @@ kubeadm init --ignore-preflight-errors=all
 Realizar restore do Cluster – ETAPA 3
 
 exit
-kubectl delete -f aula02/network/calico.yaml
-kubectl apply -f aula02/network/calico.yaml
 
 kubectl get nodes,pods -n kube-system
