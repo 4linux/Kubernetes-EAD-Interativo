@@ -48,7 +48,7 @@ kubectl exec -ti dns-dexter -- nslookup <IP-DO-POD-POD1>.default.pod.cluster.loc
 
 ### Executar pods, utilizando DNS personalizado – ETAPA 2
 
-kubectl exec -ti dns-dexter -- ping -c4 nginx1.dexter.com.br
+kubectl exec -ti dns-dexter -- ping -c4 dashboard.dexter.com.br
 
 kubectl delete -f aula03/pods
 
