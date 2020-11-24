@@ -27,10 +27,10 @@ Permitir acesso externo ao Pod
 fg
 CTRL + C
 
-kubectl port-forward --address 172.27.11.10 nginx 8081:80 &
+kubectl port-forward --address 200.100.50.100 nginx 8081:80 &
 <TECLE ENTER>
 
-curl http://172.27.11.10:8081
+curl http://200.100.50.100:8081
 
 Deletar um Pod no Cluster
 
