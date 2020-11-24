@@ -6,7 +6,7 @@ Atualizar o kubeadmin no Master – ETAPA 1
 
 cd /tmp
 
-export VERSION=v1.16.9
+export VERSION=v1.16.15
 export ARCH=amd64
 curl -sSL https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubeadm > kubeadm
 sudo install -o root -g root -m 0755 ./kubeadm /usr/bin/kubeadm
@@ -14,7 +14,7 @@ sudo kubeadm version
 
 Realizar planejamento de atualização do cluster Kubernetes
 sudo kubeadm upgrade plan
-sudo kubeadm upgrade apply v1.16.9
+sudo kubeadm upgrade apply v1.16.15
 
 Atualizar o kubelet no Master
 
@@ -28,7 +28,7 @@ cd
 
 Atualizar o kubectl em todos os Nodes do Cluster
 
-export VERSION=v1.16.9
+export VERSION=v1.16.15
 export ARCH=amd64
 
 curl -sSL https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubectl > kubectl
