@@ -5,7 +5,7 @@ LAB 2.5 - Gerenciar Ingress com HTTP e Rewrite
 
 ### Configurar Ingress na porta 80 – ETAPA 1
 
-cat /aula03/ingress/http/deploy-nginx.yaml 
+cat aula03/ingress/http/deploy-nginx.yaml 
 kubectl create -f aula03/ingress/http/deploy-nginx.yaml 
 
 cat aula03/ingress/http/ingress-nginx.yaml 
