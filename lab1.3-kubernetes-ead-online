@@ -9,7 +9,7 @@ Execute o comando para listar e extrair as imagens que o kubeadm vai utilizar:
 sudo kubeadm config images pull --kubernetes-version=1.15.1
 
 Para configurar o cluster kubernetes, execute o comando kubeadmin init:
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.15.1
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.15.1 --ignore-preflight-errors=all
 
 Configure o acesso ao Cluster
 mkdir -p $HOME/.kube
