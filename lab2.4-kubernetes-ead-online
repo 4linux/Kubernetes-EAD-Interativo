@@ -1,6 +1,6 @@
-LAB 2.4 - Instalar Ingress e HA Proxy
+LAB 2.4 - Instalar Ingress via Helm
 
-######## EXECUTAR TODOS OS COMANDOS NA VMS KUBE MASTER ########
+######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
 
 ### Instalação do Helm
 
