@@ -4,6 +4,7 @@ LAB 3.6 - Configurar Rollback de Deploy
 
 ### Criar deploy com imagem nginx
 
+sed -i 's|extensions/v1beta1|apps/v1|g' aula05/deploy/nginx-deploy.yaml
 cat aula05/deploy/nginx-deploy.yaml
 kubectl create -f aula05/deploy/nginx-deploy.yaml
 
