@@ -16,6 +16,18 @@ kubectl get pod -n metallb-system -o wide | grep speaker
 
 sed -i 's|extensions/v1beta1|apps/v1|g' aula04/daemonset/node_exporter.yaml
 cat aula04/daemonset/node_exporter.yaml
+
+## Adicionar as linhas selector:, matchLabels: e app: node-exporter
+
+vim aula04/daemonset/node_exporter.yaml
+
+...
+
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+    
 kubectl create -f aula04/daemonset/node_exporter.yaml
 
 kubectl get daemonset node-exporter
