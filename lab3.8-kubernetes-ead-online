@@ -15,6 +15,20 @@ kubectl get secrets
 kubectl describe secret mysql-secrets
 
 sed -i 's|extensions/v1beta1|apps/v1|g' aula05/secrets/mysql-deploy1.yaml
+
+## Adicionar as linhas selector:, matchLabels: e app: mysql
+
+vim aula05/secrets/mysql-deploy1.yaml
+
+...
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+
 cat aula05/secrets/mysql-deploy1.yaml
 kubectl create -f aula05/secrets/mysql-deploy1.yaml
 
@@ -47,6 +61,20 @@ kubectl get configmaps
 kubectl describe configmap mysql-config
 
 sed -i 's|extensions/v1beta1|apps/v1|g' aula05/secrets/mysql-deploy2.yaml
+
+## Adicionar as linhas selector:, matchLabels: e app: mysql
+
+vim aula05/secrets/mysql-deploy2.yaml
+
+...
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+  
 cat aula05/secrets/mysql-deploy2.yaml
 kubectl create -f aula05/secrets/mysql-deploy2.yaml
 
