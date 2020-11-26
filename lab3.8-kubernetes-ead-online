@@ -14,6 +14,7 @@ kubectl create -f aula05/secrets/mysql-secret.yaml
 kubectl get secrets
 kubectl describe secret mysql-secrets
 
+sed -i 's|extensions/v1beta1|apps/v1|g' aula05/secrets/mysql-deploy1.yaml
 cat aula05/secrets/mysql-deploy1.yaml
 kubectl create -f aula05/secrets/mysql-deploy1.yaml
 
@@ -45,6 +46,7 @@ kubectl create -f aula05/secrets/mysql-config.yaml
 kubectl get configmaps
 kubectl describe configmap mysql-config
 
+sed -i 's|extensions/v1beta1|apps/v1|g' aula05/secrets/mysql-deploy2.yaml
 cat aula05/secrets/mysql-deploy2.yaml
 kubectl create -f aula05/secrets/mysql-deploy2.yaml
 
