@@ -4,58 +4,65 @@ LAB 4.2 - Gerenciar horizontal pod autoscaler
 
 ### Instalar metrics server no Cluster
 
-helm install stable/metrics-server \
---set rbac.create=true \
---set args[0]="--kubelet-insecure-tls=true" \
---set args[1]="--kubelet-preferred-address-types=InternalIP" \
---set args[2]="--v=2" \
---name metrics-server
+helm repo add metrics-server https://olemarkus.github.io/metrics-server
 
-kubectl get pods -l app=metrics-server
-kubectl get --raw /apis/metrics.k8s.io/
+helm install metrics-server/metrics-server --set rbac.create=true --set args[0]="--kubelet-insecure-tls=true" --set args[1]="--kubelet-preferred-address-types=InternalIP" --set args[2]="--v=2" --name metrics-server
+
 
 ### Coletar métricas de Nós e Pods
 
 kubectl top nodes
 
-kubectl apply -f aula05/secrets/mysql-deploy1.yaml
-kubectl top pod -l app=mysql
+kubectl top pod
 
-POD=$(kubectl get pod | grep mysql | awk -F" " '{print $1}')
-kubectl top pod $POD --containers
+kubectl top pod --all-namespaces
 
-kubectl delete -f aula05/secrets/mysql-deploy1.yaml
+kubectl top pod -n kube-system
+
 
 ### Criando um horizontal pod autoscaler
 
 #TERMINAL 1
-kubectl apply -f https://k8s.io/examples/application/php-apache.yaml
 
-kubectl get pods -l run=php-apache
+cat aula 05/hpa-deploy.yaml
 
-kubectl autoscale deployment/php-apache --min=1 --max=5 --cpu-percent=50
+kubectl apply -f aula05/hpa/hpa-deploy.yaml
+
+kubectl get pods -l app=hpa-deploy
+
+kubectl scale deployment/hpa-deploy --replicas=3
+
+kubectl get pods -l app=hpa-deploy
+
+
+#TERMINAL 2
+
+kubectl autoscale deployment/hpa-deploy --min=3 --max=10 --cpu-percent=50
 
 kubectl get hpa
 
-kubectl describe hpa php-apache
+kubectl describe hpa hpa-deploy
 
-kubectl get pods -l run=php-apache
+kubectl get pods -l app=hpa-deploy
 
-kubectl get service -l run=php-apache
+kubectl get service -l app=hpa-deploy
 
 #TERMINAL 2
 kubectl run --rm -ti busybox --generator=run-pod/v1 --image=busybox /bin/sh
 
-while true; do wget -q -O - http://php-apache; done
+while true; do wget -q -O - http://hpa-deploy; done
 
 #TERMINAL 1
+
 kubectl get hpa -w
-kubectl get pods -l run=php-apache
+kubectl get pods -l app=hpa-deploy
 
-kubectl delete hpa php-apache
+kubectl delete hpa hpa-deploy
 
-kubectl delete -f https://k8s.io/examples/application/php-apache.yaml
+kubectl delete -f aula05/hpa/hpa-deploy.yaml
 
 #TERMINAL 2
 CTRL + C
 exit
+
+kubectl delete pod client --force --grace-period=0
