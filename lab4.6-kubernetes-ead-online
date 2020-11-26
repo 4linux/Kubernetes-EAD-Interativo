@@ -28,6 +28,7 @@ kubectl describe pvc pvc-nfs
 
 ### Executar Pod com volume Persistente
 
+sed -i 's|extensions/v1beta1|apps/v1|g' aula06/nfs/nginx-deploy2.yaml
 cat aula06/nfs/nginx-deploy2.yaml
 kubectl apply -f aula06/nfs/nginx-deploy2.yaml
 
