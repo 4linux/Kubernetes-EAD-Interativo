@@ -38,6 +38,25 @@ kubectl delete -f aula04/labels/nginx-deploy.yaml
 
 sed -i 's|extensions/v1beta1|apps/v1|g' aula04/labels/nginx-replication.yaml
 cat aula04/labels/nginx-replication.yaml
+
+## Adicionar as linhas selector:, matchLabels: e app: nginx
+
+vim aula04/labels/nginx-replication.yaml
+
+...
+
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+
+
 kubectl create -f aula04/labels/nginx-replication.yaml
       
 kubectl get pod -o wide | grep nginx-deploy
