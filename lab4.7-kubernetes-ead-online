@@ -45,6 +45,7 @@ spec:
       labels:
         app: mysql
 
+sed -i 's|extensions/v1beta1|apps/v1|g' aula06/configmap/mysql-deploy.yaml
 cat aula06/configmap/mysql-deploy.yaml
 kubectl apply -f aula06/configmap/mysql-deploy.yaml
 
