@@ -10,7 +10,7 @@ kubectl describe daemonset calico-node -n kube-system
 
 kubectl get pod -n kube-system -o wide | grep kube-proxy
 kubectl get pod -n kube-system -o wide | grep calico-node
-kubectl get pod -n kube-system -o wide | grep nginx
+kubectl get pod -n metallb-system -o wide | grep speaker
 
 ### Implementar Daemonset no Cluster
 
