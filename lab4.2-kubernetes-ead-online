@@ -24,7 +24,7 @@ kubectl top pod -n kube-system
 
 #TERMINAL 1
 
-cat aula 05/hpa-deploy.yaml
+cat aula05/hpa/hpa-deploy.yaml
 
 kubectl apply -f aula05/hpa/hpa-deploy.yaml
 
