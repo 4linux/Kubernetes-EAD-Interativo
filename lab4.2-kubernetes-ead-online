@@ -32,7 +32,7 @@ kubectl get pods -l app=hpa-deploy
 
 kubectl scale deployment/hpa-deploy --replicas=3
 
-kubectl get pods -l app=hpa-deploy
+kubectl get pods -l run=hpa-deploy
 
 
 #TERMINAL 2
