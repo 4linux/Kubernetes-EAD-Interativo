@@ -20,6 +20,6 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 
 ANOTE o Token!
 
-Acesse o endereço https://200.100.50.100:8443
+Acesse o endereço https://200.100.50.20x:8443
 
 Selecione a opção Token e cole o hash que você copiou.
