@@ -43,9 +43,9 @@ kubectl get hpa
 
 kubectl describe hpa hpa-deploy
 
-kubectl get pods -l app=hpa-deploy
+kubectl get pods -l run=hpa-deploy
 
-kubectl get service -l app=hpa-deploy
+kubectl get service -l run=hpa-deploy
 
 #TERMINAL 2
 kubectl run --rm -ti busybox --generator=run-pod/v1 --image=busybox /bin/sh
@@ -55,7 +55,7 @@ while true; do wget -q -O - http://hpa-deploy; done
 #TERMINAL 1
 
 kubectl get hpa -w
-kubectl get pods -l app=hpa-deploy
+kubectl get pods -l run=hpa-deploy
 
 kubectl delete hpa hpa-deploy
 
