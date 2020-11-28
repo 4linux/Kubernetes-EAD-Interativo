@@ -32,7 +32,7 @@ sudo systemctl start kubelet
 ######## EXECUTAR TODOS OS COMANDOS NA VM KUBE MASTER ########
 
 kubectl get nodes
-kubectl describe kube-node02.dexter.com.br
+kubectl describe node kube-node02.dexter.com.br
 
 ### Node Scheduler
 
