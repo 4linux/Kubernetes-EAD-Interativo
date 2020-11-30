@@ -6,11 +6,14 @@ LAB 5.8 - Kubernetes Dashboard
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta6/aio/deploy/recommended.yaml
 
-kubectl get pods -l k8s-app=kubernetes-dashboard -n kubernetes-dashboard
-
 kubectl get svc -l k8s-app=kubernetes-dashboard -n kubernetes-dashboard
 
-kubectl -n kubernetes-dashboard port-forward --address 0.0.0.0 $POD_NAME 8443:8443 &
+kubectl edit svc kubernetes-dashboard -n kubernetes-dashboard
+
+ALTERAR:
+  type: ClusterIP
+PARA:
+type: LoadBalancer
 
 cat aula08/dashboard/admin-user.yaml
 
