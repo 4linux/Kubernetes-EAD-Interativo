@@ -4,7 +4,6 @@ LAB 4.1 - Gerenciar réplicas de aplicações em Deploy
 
 ### Gerenciar réplicas no Deploy
 
-sed -i 's|extensions/v1beta1|apps/v1|g' aula05/deploy/nginx-deploy.yaml
 cat aula05/deploy/nginx-deploy.yaml
 kubectl apply -f aula05/deploy/nginx-deploy.yaml
 
