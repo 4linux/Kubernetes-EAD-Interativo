@@ -18,7 +18,6 @@ kubectl get secrets
 
 ### Configurar Ingress na porta 443 – ETAPA 1
 
-sed -i 's|extensions/v1beta1|apps/v1|g' aula03/ingress/tls/deploy-nginx.yaml
 cat aula03/ingress/tls/deploy-nginx.yaml 
 kubectl create -f aula03/ingress/tls/deploy-nginx.yaml
 
