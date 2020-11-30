@@ -4,18 +4,6 @@ LAB 5.4 - Gerenciar logs no Kubernetes
 
 ### Visualizar logs de Deploy/Pod
 
-#Adicionar as linhas selector:, matchLabels: e app: mysql
-
-vim aula08/logs/mysql-deploy.yaml
-
-...
-
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mysql
-
 cat aula08/logs/mysql-deploy.yaml
 kubectl apply -f aula08/logs/mysql-deploy.yaml
 
