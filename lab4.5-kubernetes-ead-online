@@ -31,7 +31,6 @@ kubectl describe pvc volume-claim-local
 
 ### Executar Pod com volume Persistente
 
-sed -i 's|extensions/v1beta1|apps/v1|g' aula06/local/nginx-deploy1.yaml
 cat aula06/local/nginx-deploy1.yaml
 kubectl apply -f aula06/local/nginx-deploy1.yaml
 
