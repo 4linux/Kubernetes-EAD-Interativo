@@ -13,7 +13,6 @@ kubectl get node kube-node02.dexter.com.br --show-labels
 
 ### Configurar Labels – ETAPA 1
 
-sed -i 's|extensions/v1beta1|apps/v1|g' aula04/labels/nginx-deploy.yaml
 cat aula04/labels/nginx-deploy.yaml 
 kubectl create -f aula04/labels/nginx-deploy.yaml
 
@@ -36,27 +35,7 @@ kubectl delete -f aula04/labels/nginx-deploy.yaml
 
 ### Gerenciar Seletores
 
-sed -i 's|extensions/v1beta1|apps/v1|g' aula04/labels/nginx-replication.yaml
 cat aula04/labels/nginx-replication.yaml
-
-## Adicionar as linhas selector:, matchLabels: e app: nginx
-
-vim aula04/labels/nginx-replication.yaml
-
-...
-
-spec:
-  replicas: 5
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-
-
 kubectl create -f aula04/labels/nginx-replication.yaml
       
 kubectl get pod -o wide | grep nginx-deploy
