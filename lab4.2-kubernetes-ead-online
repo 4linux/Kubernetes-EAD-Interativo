@@ -28,7 +28,7 @@ cat aula05/hpa/hpa-deploy.yaml
 
 kubectl apply -f aula05/hpa/hpa-deploy.yaml
 
-kubectl get pods -l app=hpa-deploy
+kubectl get pods -l run=hpa-deploy
 
 kubectl scale deployment/hpa-deploy --replicas=3
 
