@@ -24,7 +24,6 @@ kubectl delete -f aula03/ingress/http
 
 ### Configurar Ingress para Redirecionamento – ETAPA 1
 
-sed -i 's|extensions/v1beta1|apps/v1|g' aula03/ingress/rewrite/deploy-nginx.yaml
 cat aula03/ingress/rewrite/deploy-nginx.yaml 
 kubectl create -f aula03/ingress/rewrite/deploy-nginx.yaml
 
