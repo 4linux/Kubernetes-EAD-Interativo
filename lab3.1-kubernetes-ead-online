@@ -49,4 +49,4 @@ kubectl edit deploy nginx-deploy
             
 kubectl get pod -o wide | grep nginx-deploy
 
-kubectl delete -f aula04/labels/nginx-deploy.yaml
+kubectl delete -f aula04/labels/nginx-replication.yaml
