@@ -35,6 +35,17 @@ kubectl delete -f aula04/labels/nginx-deploy.yaml
 
 ### Gerenciar Seletores
 
+Editar o arquivo aula04/labels/nginx-replication.yaml
+
+vim aula04/labels/nginx-replication.yaml
+
+### Adicionar abaixo de replicas: 5
+
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nginx
+      
 cat aula04/labels/nginx-replication.yaml
 kubectl create -f aula04/labels/nginx-replication.yaml
       
