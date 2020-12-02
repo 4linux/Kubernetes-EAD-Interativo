@@ -14,6 +14,14 @@ kubectl create -f aula05/secrets/mysql-secret.yaml
 kubectl get secrets
 kubectl describe secret mysql-secrets
 
+### Editar o arquivo aula05/secrets/mysql-deploy1.yaml
+
+vim aula05/secrets/mysql-deploy1.yaml (ABAIXO de Replicas: 1)
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
 
 cat aula05/secrets/mysql-deploy1.yaml
 kubectl create -f aula05/secrets/mysql-deploy1.yaml
@@ -39,12 +47,23 @@ kubectl delete -f aula05/secrets/mysql-deploy1.yaml
 
 ### Configurar Configmaps no Cluster Kubernetes
 
+
 cat aula05/secrets/mysql-config.yaml
 
 kubectl create -f aula05/secrets/mysql-config.yaml
 
 kubectl get configmaps
 kubectl describe configmap mysql-config
+
+### Editar o arquivo aula05/secrets/mysql-deploy2.yaml
+
+vim aula05/secrets/mysql-deploy2.yaml (ABAIXO de Replicas: 1)
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+
 
 cat aula05/secrets/mysql-deploy2.yaml
 kubectl create -f aula05/secrets/mysql-deploy2.yaml
