@@ -39,4 +39,4 @@ cat kube-controller-manager-kube-master.dexter.com.br_kube-system_kube-controlle
 cat kube-scheduler-kube-master.dexter.com.br_kube-system_kube-scheduler-<TAB>
 
 exit
-kubectl delete -f aula08/logs/mysql-deploy.yaml
+kubectl delete -f aula06/configmap/mysql-deploy.yaml
