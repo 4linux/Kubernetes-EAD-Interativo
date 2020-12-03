@@ -4,8 +4,8 @@ LAB 5.4 - Gerenciar logs no Kubernetes
 
 ### Visualizar logs de Deploy/Pod
 
-cat aula08/logs/mysql-deploy.yaml
-kubectl apply -f aula08/logs/mysql-deploy.yaml
+cat aula06/configmap/mysql-deploy.yaml
+kubectl apply -f aula06/configmap/mysql-deploy.yaml
 
 kubectl logs --help
 
